@@ -69,8 +69,8 @@ GameObject:
   - component: {fileID: 379267580967055713}
   - component: {fileID: 379267580967055712}
   - component: {fileID: 379267580967055715}
-  - component: {fileID: 4257788423569632375}
-  - component: {fileID: 533669022411292786}
+  - component: {fileID: 7513531330689228547}
+  - component: {fileID: 1122559176513915064}
   m_Layer: 0
   m_Name: Rig
   m_TagString: Untagged
@@ -277,7 +277,7 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.4, z: 0}
---- !u!114 &4257788423569632375
+--- !u!114 &7513531330689228547
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -286,7 +286,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 379267580967055709}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Script: {fileID: 11500000, guid: 062f53119dac94530aba884ce344e015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   UseUnreliableDeltas: 0
@@ -308,7 +308,7 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &533669022411292786
+--- !u!114 &1122559176513915064
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -333,8 +333,8 @@ GameObject:
   - component: {fileID: 601599152512134416}
   - component: {fileID: 601599152512134421}
   - component: {fileID: 601599152512134420}
-  - component: {fileID: 2090704088509037728}
-  - component: {fileID: 6079126739020223949}
+  - component: {fileID: 1379897199383057303}
+  - component: {fileID: 3249083707841993112}
   m_Layer: 0
   m_Name: mixamorig:RightArm
   m_TagString: Untagged
@@ -497,7 +497,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 7858542106054934467}
---- !u!114 &2090704088509037728
+--- !u!114 &1379897199383057303
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -506,7 +506,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 601599152512134417}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Script: {fileID: 11500000, guid: 062f53119dac94530aba884ce344e015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   UseUnreliableDeltas: 0
@@ -528,7 +528,7 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &6079126739020223949
+--- !u!114 &3249083707841993112
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -713,8 +713,8 @@ GameObject:
   - component: {fileID: 2313694067247590745}
   - component: {fileID: 2313694067247590747}
   - component: {fileID: 2313694067247590746}
-  - component: {fileID: 3237520993774397251}
-  - component: {fileID: 2834228856588583967}
+  - component: {fileID: 1935460146590478624}
+  - component: {fileID: 8353671938576171219}
   m_Layer: 0
   m_Name: mixamorig:LeftLeg
   m_TagString: Untagged
@@ -877,7 +877,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 7858542105357733661}
---- !u!114 &3237520993774397251
+--- !u!114 &1935460146590478624
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -886,7 +886,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2313694067247590743}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Script: {fileID: 11500000, guid: 062f53119dac94530aba884ce344e015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   UseUnreliableDeltas: 0
@@ -908,7 +908,7 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &2834228856588583967
+--- !u!114 &8353671938576171219
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -965,8 +965,8 @@ GameObject:
   - component: {fileID: 2432905567067448701}
   - component: {fileID: 2432905567067448702}
   - component: {fileID: 2432905567067448449}
-  - component: {fileID: 8236104411603312569}
-  - component: {fileID: 7112005257309032493}
+  - component: {fileID: 3275482749531393907}
+  - component: {fileID: 5340663792577052339}
   m_Layer: 0
   m_Name: mixamorig:LeftUpLeg
   m_TagString: Untagged
@@ -1129,7 +1129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 7858542106906385667}
---- !u!114 &8236104411603312569
+--- !u!114 &3275482749531393907
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1138,7 +1138,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2432905567067448698}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Script: {fileID: 11500000, guid: 062f53119dac94530aba884ce344e015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   UseUnreliableDeltas: 0
@@ -1160,7 +1160,7 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &7112005257309032493
+--- !u!114 &5340663792577052339
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1553,8 +1553,8 @@ GameObject:
   - component: {fileID: 4362581331916782112}
   - component: {fileID: 4362581331916782115}
   - component: {fileID: 4362581331916782114}
-  - component: {fileID: 5084128114982510248}
-  - component: {fileID: 3075096708206732684}
+  - component: {fileID: 8425952569600550468}
+  - component: {fileID: 8244900658888735667}
   m_Layer: 0
   m_Name: mixamorig:LeftForeArm
   m_TagString: Untagged
@@ -1732,7 +1732,7 @@ MonoBehaviour:
   rb: {fileID: 4362581331916782110}
   animator: {fileID: 7858542105774195862}
   isLeftOrRight: 0
---- !u!114 &5084128114982510248
+--- !u!114 &8425952569600550468
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1741,7 +1741,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4362581331916782108}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Script: {fileID: 11500000, guid: 062f53119dac94530aba884ce344e015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   UseUnreliableDeltas: 0
@@ -1763,7 +1763,7 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &3075096708206732684
+--- !u!114 &8244900658888735667
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1886,8 +1886,8 @@ GameObject:
   - component: {fileID: 5063372601105457553}
   - component: {fileID: 5063372601105457552}
   - component: {fileID: 5063372601105457555}
-  - component: {fileID: 97916911835706439}
-  - component: {fileID: 6471204938640242765}
+  - component: {fileID: 8329685274314107325}
+  - component: {fileID: 7815141253863427349}
   m_Layer: 0
   m_Name: mixamorig:RightLeg
   m_TagString: Untagged
@@ -2146,7 +2146,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 7858542105320665223}
---- !u!114 &97916911835706439
+--- !u!114 &8329685274314107325
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2155,7 +2155,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5303357204965900831}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Script: {fileID: 11500000, guid: 062f53119dac94530aba884ce344e015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   UseUnreliableDeltas: 0
@@ -2177,7 +2177,7 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &6471204938640242765
+--- !u!114 &7815141253863427349
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2202,8 +2202,8 @@ GameObject:
   - component: {fileID: 6876059324888587231}
   - component: {fileID: 6876059324888587232}
   - component: {fileID: 6876059324888587235}
-  - component: {fileID: 3661613898146358166}
-  - component: {fileID: 4134152135676748158}
+  - component: {fileID: 4169691279877930751}
+  - component: {fileID: 8073025150095352013}
   m_Layer: 0
   m_Name: mixamorig:RightUpLeg
   m_TagString: Untagged
@@ -2366,7 +2366,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 7858542106175176607}
---- !u!114 &3661613898146358166
+--- !u!114 &4169691279877930751
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2375,7 +2375,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6876059324888587228}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Script: {fileID: 11500000, guid: 062f53119dac94530aba884ce344e015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   UseUnreliableDeltas: 0
@@ -2397,7 +2397,7 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &4134152135676748158
+--- !u!114 &8073025150095352013
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3251,8 +3251,8 @@ GameObject:
   - component: {fileID: 6602354896442776129}
   - component: {fileID: 6602354896442776131}
   - component: {fileID: 6602354896442776130}
-  - component: {fileID: 7711700876995004992}
-  - component: {fileID: 1638048827602554148}
+  - component: {fileID: 235457247821585200}
+  - component: {fileID: 2605288556473302367}
   m_Layer: 0
   m_Name: mixamorig:Head
   m_TagString: Untagged
@@ -3416,7 +3416,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 7858542106956920067}
---- !u!114 &7711700876995004992
+--- !u!114 &235457247821585200
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3425,7 +3425,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7854617337637334067}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Script: {fileID: 11500000, guid: 062f53119dac94530aba884ce344e015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   UseUnreliableDeltas: 0
@@ -3447,7 +3447,7 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &1638048827602554148
+--- !u!114 &2605288556473302367
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6088,8 +6088,8 @@ GameObject:
   - component: {fileID: 6493000714276928622}
   - component: {fileID: 6493000714276928627}
   - component: {fileID: 6493000714276928626}
-  - component: {fileID: 9130477401958951012}
-  - component: {fileID: 6517764269665970890}
+  - component: {fileID: 7298486643450635643}
+  - component: {fileID: 3281320523169699936}
   m_Layer: 0
   m_Name: mixamorig:LeftArm
   m_TagString: Untagged
@@ -6252,7 +6252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 7858542106326827921}
---- !u!114 &9130477401958951012
+--- !u!114 &7298486643450635643
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6261,7 +6261,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8077510597707094740}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Script: {fileID: 11500000, guid: 062f53119dac94530aba884ce344e015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   UseUnreliableDeltas: 0
@@ -6283,7 +6283,7 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &6517764269665970890
+--- !u!114 &3281320523169699936
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6309,8 +6309,8 @@ GameObject:
   - component: {fileID: 3014372353230526979}
   - component: {fileID: 3014372353230526978}
   - component: {fileID: 3014372353230526981}
-  - component: {fileID: 9151463457449560187}
-  - component: {fileID: 1437107253764784544}
+  - component: {fileID: 4374050233514625278}
+  - component: {fileID: 7030787619002493118}
   m_Layer: 0
   m_Name: mixamorig:RightForeArm
   m_TagString: Untagged
@@ -6488,7 +6488,7 @@ MonoBehaviour:
   rb: {fileID: 3014372353230526977}
   animator: {fileID: 7858542105774195862}
   isLeftOrRight: 1
---- !u!114 &9151463457449560187
+--- !u!114 &4374050233514625278
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6497,7 +6497,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8192436145688301736}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Script: {fileID: 11500000, guid: 062f53119dac94530aba884ce344e015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   UseUnreliableDeltas: 0
@@ -6519,7 +6519,7 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &1437107253764784544
+--- !u!114 &7030787619002493118
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6576,8 +6576,8 @@ GameObject:
   - component: {fileID: 1939295876486057810}
   - component: {fileID: 1939295876486057815}
   - component: {fileID: 1939295876486057814}
-  - component: {fileID: 5410090608387035095}
-  - component: {fileID: 4055466931892493093}
+  - component: {fileID: 1009886502164962389}
+  - component: {fileID: 6564850920874194567}
   m_Layer: 0
   m_Name: mixamorig:Spine1
   m_TagString: Untagged
@@ -6739,7 +6739,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 7858542106361863062}
---- !u!114 &5410090608387035095
+--- !u!114 &1009886502164962389
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6748,7 +6748,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8605723770562724688}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Script: {fileID: 11500000, guid: 062f53119dac94530aba884ce344e015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   UseUnreliableDeltas: 0
@@ -6770,7 +6770,7 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &4055466931892493093
+--- !u!114 &6564850920874194567
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
