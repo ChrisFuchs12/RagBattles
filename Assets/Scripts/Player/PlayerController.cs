@@ -1,11 +1,13 @@
 using Unity.Netcode;
 using UnityEngine;
 
+[RequireComponent(typeof(ClientNetworkTransform))]
+[RequireComponent(typeof(Rigidbody))]
 public class PlayerController : NetworkBehaviour
 {
     public float speed = 5f;      // Movement speed
     public float jumpForce = 10f; // Jump force
-    private Rigidbody rb;         // Regular Rigidbody reference
+    private Rigidbody rb;         // Reference to the Rigidbody
     private bool isGrounded;      // Check if the player is grounded
 
     public Transform groundCheck;  // Reference to the ground check (for detecting if grounded)
@@ -14,7 +16,13 @@ public class PlayerController : NetworkBehaviour
 
     private void Start()
     {
-        rb = GetComponent<Rigidbody>();  // Get the Rigidbody component
+        rb = GetComponent<Rigidbody>();
+
+        if (!IsOwner)
+        {
+            // Disable Rigidbody and Input for non-owned players to ensure no interference
+            rb.isKinematic = true; // Only the local player controls its physics
+        }
     }
 
     private void Update()
@@ -36,8 +44,8 @@ public class PlayerController : NetworkBehaviour
         // Calculate movement direction relative to player's orientation
         Vector3 move = (transform.right * moveX + transform.forward * moveZ).normalized * speed * Time.deltaTime;
 
-        // Apply movement on the server
-        MovePlayerServerRpc(move);
+        // Apply movement locally
+        rb.MovePosition(rb.position + move);
     }
 
     // Handle jumping (only when grounded)
@@ -48,47 +56,7 @@ public class PlayerController : NetworkBehaviour
 
         if (isGrounded && Input.GetButtonDown("Jump"))  // When player presses jump (spacebar)
         {
-            JumpServerRpc();
-        }
-    }
-
-    // ServerRpc for movement
-    [ServerRpc]
-    private void MovePlayerServerRpc(Vector3 moveDirection, ServerRpcParams rpcParams = default)
-    {
-        // Verify the owner is making the move request
-        ulong clientId = rpcParams.Receive.SenderClientId;
-        if (clientId != OwnerClientId)
-            return;
-
-        // Update position on the server
-        rb.MovePosition(rb.position + moveDirection);
-
-        // Broadcast position change to all clients
-        UpdatePlayerPositionClientRpc(rb.position);
-    }
-
-    // ServerRpc for jumping
-    [ServerRpc]
-    private void JumpServerRpc(ServerRpcParams rpcParams = default)
-    {
-        ulong clientId = rpcParams.Receive.SenderClientId;
-        if (clientId != OwnerClientId)
-            return;
-
-        if (rb != null)
-        {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);  // Apply upward force
-        }
-    }
-
-    // ClientRpc to update player position for all clients
-    [ClientRpc]
-    private void UpdatePlayerPositionClientRpc(Vector3 newPosition)
-    {
-        if (!IsOwner) // Prevent overriding local player position
-        {
-            rb.position = newPosition;
         }
     }
 }
