@@ -5,14 +5,9 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : NetworkBehaviour
 {
-    public float speed = 5f;      // Movement speed
-    public float jumpForce = 10f; // Jump force
-    private Rigidbody rb;         // Reference to the Rigidbody
-    private bool isGrounded;      // Check if the player is grounded
-
-    public Transform groundCheck;  // Reference to the ground check (for detecting if grounded)
-    public float groundDistance = 0.4f;  // Distance to check for ground
-    public LayerMask groundMask;  // Layer mask to specify what is considered "ground"
+    public float speed = 10f;        // Movement speed multiplier
+    public float maxSpeed = 5f;     // Maximum movement speed
+    private Rigidbody rb;           // Reference to the Rigidbody
 
     private void Start()
     {
@@ -20,9 +15,13 @@ public class PlayerController : NetworkBehaviour
 
         if (!IsOwner)
         {
-            // Disable Rigidbody and Input for non-owned players to ensure no interference
-            rb.isKinematic = true; // Only the local player controls its physics
+            rb.isKinematic = true; // Disable physics control for non-owned players
+            return;
         }
+
+        // Ensure Rigidbody settings are correct
+        rb.isKinematic = false;
+        rb.freezeRotation = true; // Prevent rotation due to collisions
     }
 
     private void Update()
@@ -30,11 +29,10 @@ public class PlayerController : NetworkBehaviour
         if (IsOwner)  // Only allow the local player to control movement
         {
             HandleMovement();
-            HandleJump();
         }
     }
 
-    // Handle regular movement (WASD or Arrow keys)
+    // Handle physics-based movement
     private void HandleMovement()
     {
         // Get player input for movement
@@ -42,21 +40,24 @@ public class PlayerController : NetworkBehaviour
         float moveZ = Input.GetAxis("Vertical");    // Vertical input (W/S or Up/Down Arrow)
 
         // Calculate movement direction relative to player's orientation
-        Vector3 move = (transform.right * moveX + transform.forward * moveZ).normalized * speed * Time.deltaTime;
+        Vector3 moveDirection = (transform.right * moveX + transform.forward * moveZ).normalized;
 
-        // Apply movement locally
-        rb.MovePosition(rb.position + move);
+        // Apply force in the movement direction
+        rb.AddForce(moveDirection * speed, ForceMode.Force);
+
+        // Limit maximum speed
+        LimitSpeed();
     }
 
-    // Handle jumping (only when grounded)
-    private void HandleJump()
+    // Clamp the player's speed to a maximum value
+    private void LimitSpeed()
     {
-        // Check if the player is grounded before allowing jumping
-        isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, groundDistance, groundMask);
+        Vector3 horizontalVelocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
 
-        if (isGrounded && Input.GetButtonDown("Jump"))  // When player presses jump (spacebar)
+        if (horizontalVelocity.magnitude > maxSpeed)
         {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);  // Apply upward force
+            horizontalVelocity = horizontalVelocity.normalized * maxSpeed;
+            rb.velocity = new Vector3(horizontalVelocity.x, rb.velocity.y, horizontalVelocity.z);
         }
     }
 }
