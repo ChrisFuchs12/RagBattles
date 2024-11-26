@@ -252,6 +252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 1000
+  strafeSpeed: 1000
   maxSpeed: 500
 --- !u!143 &379267580967055715
 CharacterController:
