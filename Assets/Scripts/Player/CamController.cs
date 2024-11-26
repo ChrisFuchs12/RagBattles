@@ -1,42 +1,53 @@
-using System.Collections;
-using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class CamController : MonoBehaviour
+public class CamController : NetworkBehaviour
 {
-
-    public Camera playerCamera;
-    public GameObject balancer;
-    public static float rotationSpeed = 30;
-
-    private float rotationX = 0;
-    private float rotationY = 0;
-    public Transform root;
-
-    public float stomachOffset;
+    public Camera playerCamera;   // Camera assigned to the player
+    public Transform root;        // Player's root object for rotation
     public ConfigurableJoint hipJoint, stomachJoint;
 
-    private bool canMove = true;
+    public static float rotationSpeed = 30f;
+    public float stomachOffset = 0f;
 
-    void Start()
+    private float rotationX = 0f;
+    private float rotationY = 0f;
+
+    private void Start()
     {
+        if (!IsOwner)
+        {
+            // Disable non-local player cameras
+            playerCamera.enabled = false;
+            playerCamera.GetComponent<AudioListener>().enabled = false;
+            return;
+        }
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-       CamControll();
+        if (!IsOwner) return;
+
+        HandleCameraRotation();
     }
 
-    void CamControll(){
-        rotationX += Input.GetAxis("Mouse X")*rotationSpeed;
-        rotationY -= Input.GetAxis("Mouse Y")*rotationSpeed;
-        rotationY = Mathf.Clamp(rotationY, -35, 60);
+    private void HandleCameraRotation()
+    {
+        rotationX += Input.GetAxis("Mouse X") * rotationSpeed * Time.deltaTime;
+        rotationY -= Input.GetAxis("Mouse Y") * rotationSpeed * Time.deltaTime;
+        rotationY = Mathf.Clamp(rotationY, -35, 60); // Limit vertical rotation
 
+        // Apply rotation to the root transform
         Quaternion rootRotation = Quaternion.Euler(rotationY, rotationX, 0);
         root.rotation = rootRotation;
-        
-        stomachJoint.targetRotation = Quaternion.Euler(rotationY + stomachOffset, 0, 0);
+
+        // Adjust stomach joint rotation
+        if (stomachJoint != null)
+        {
+            stomachJoint.targetRotation = Quaternion.Euler(rotationY + stomachOffset, 0, 0);
+        }
     }
 }

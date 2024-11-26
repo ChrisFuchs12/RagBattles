@@ -8,6 +8,7 @@ public class PlayerController : NetworkBehaviour
     public float speed = 10f;        // Movement speed multiplier
     public float maxSpeed = 5f;     // Maximum movement speed
     private Rigidbody rb;           // Reference to the Rigidbody
+    private Camera playerCamera;    // Reference to the player's camera
 
     private void Start()
     {
@@ -19,37 +20,68 @@ public class PlayerController : NetworkBehaviour
             return;
         }
 
-        // Ensure Rigidbody settings are correct
+        playerCamera = Camera.main; // Assumes the camera is the main camera
         rb.isKinematic = false;
         rb.freezeRotation = true; // Prevent rotation due to collisions
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        if (IsOwner)  // Only allow the local player to control movement
+        if (IsOwner)
         {
-            HandleMovement();
+            HandleMovement(); // Physics-based movement
+            RotateToCameraDirection(); // Rotate to face the camera
         }
     }
 
-    // Handle physics-based movement
     private void HandleMovement()
     {
-        // Get player input for movement
-        float moveX = Input.GetAxis("Horizontal");  // Horizontal input (A/D or Left/Right Arrow)
-        float moveZ = Input.GetAxis("Vertical");    // Vertical input (W/S or Up/Down Arrow)
+        // Get input from the player
+        float moveX = Input.GetAxis("Horizontal");
+        float moveZ = Input.GetAxis("Vertical");
 
-        // Calculate movement direction relative to player's orientation
-        Vector3 moveDirection = (transform.right * moveX + transform.forward * moveZ).normalized;
+        if (playerCamera == null || (moveX == 0 && moveZ == 0))
+        {
+            return; // No movement input
+        }
 
-        // Apply force in the movement direction
+        // Calculate movement direction based on the camera's orientation
+        Vector3 forward = playerCamera.transform.forward;
+        Vector3 right = playerCamera.transform.right;
+
+        forward.y = 0f; // Ignore vertical component for horizontal movement
+        right.y = 0f;
+
+        forward.Normalize();
+        right.Normalize();
+
+        Vector3 moveDirection = (forward * moveZ + right * moveX).normalized;
+
+        // Apply force in the direction of movement
         rb.AddForce(moveDirection * speed, ForceMode.Force);
 
-        // Limit maximum speed
+        // Clamp the player's horizontal velocity to the max speed
         LimitSpeed();
     }
 
-    // Clamp the player's speed to a maximum value
+    private void RotateToCameraDirection()
+    {
+        if (playerCamera == null)
+        {
+            return;
+        }
+
+        // Rotate the player to align with the camera's forward direction
+        Vector3 cameraForward = playerCamera.transform.forward;
+        cameraForward.y = 0; // Ignore vertical rotation
+
+        if (cameraForward.sqrMagnitude > 0.01f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(cameraForward);
+            rb.MoveRotation(Quaternion.Lerp(rb.rotation, targetRotation, Time.deltaTime * 10f));
+        }
+    }
+
     private void LimitSpeed()
     {
         Vector3 horizontalVelocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);

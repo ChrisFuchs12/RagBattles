@@ -235,11 +235,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCamera: {fileID: 7858542105495010796}
-  balancer: {fileID: 7858542105955430536}
   root: {fileID: 7858542105955430538}
-  stomachOffset: 0
   hipJoint: {fileID: 379267580967055710}
   stomachJoint: {fileID: 1939295876486057815}
+  stomachOffset: 0
 --- !u!114 &379267580967055712
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -252,13 +251,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08c21eafe4ab66f488d182287034edc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 100
-  jumpForce: 50000
-  groundCheck: {fileID: 0}
-  groundDistance: 0.4
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 0
+  speed: 1000
+  maxSpeed: 500
 --- !u!143 &379267580967055715
 CharacterController:
   m_ObjectHideFlags: 0
