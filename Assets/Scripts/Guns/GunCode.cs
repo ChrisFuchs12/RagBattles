@@ -5,11 +5,11 @@ using Unity.Netcode;
 
 public class GunCode : NetworkBehaviour
 {
-    //assigning variables
+    // Assigning variables
     [SerializeField] private Transform firingPoint;
     [SerializeField] private GameObject bullet;
 
-    //settings
+    // Settings
     [SerializeField] private float bulletSpeed = 50;
     [SerializeField] private float ammo = 50;
     [SerializeField] private float maxAmmo = 50;
@@ -17,8 +17,9 @@ public class GunCode : NetworkBehaviour
     void Update()
     {
         // Allow everyone (host and clients) to shoot
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && IsOwner) // Ensure only local player can send RPCs
         {
+            Debug.Log("Shoot button pressed");
             RequestSpawnBulletServerRpc();
         }
     }
@@ -26,20 +27,34 @@ public class GunCode : NetworkBehaviour
     [ServerRpc]
     private void RequestSpawnBulletServerRpc(ServerRpcParams rpcParams = default)
     {
-        // Server validates the request and spawns the bullet
-        SpawnBulletClientRpc();
-    }
+        Debug.Log("Server received spawn request");
 
-    [ClientRpc]
-    private void SpawnBulletClientRpc(ClientRpcParams rpcParams = default)
-    {
-        // Instantiate the bullet on all clients at the correct position and rotation
+        // Instantiate and handle bullet on the server
         GameObject spawnedObj = Instantiate(bullet, firingPoint.position, firingPoint.rotation);
         
+        // Check for a NetworkObject component
+        NetworkObject networkObject = spawnedObj.GetComponent<NetworkObject>();
+        if (networkObject == null)
+        {
+            Debug.LogError("Bullet prefab is missing a NetworkObject component!");
+            Destroy(spawnedObj);
+            return;
+        }
+
+        // Spawn the bullet on the network
+        networkObject.Spawn();
+
+        // Apply force on the server
         Rigidbody rb = spawnedObj.GetComponent<Rigidbody>();
         if (rb != null)
         {
+            Debug.Log("Applying force to bullet.");
             rb.AddForce(firingPoint.forward * bulletSpeed, ForceMode.Impulse);
+        }
+        else
+        {
+            Debug.LogError("No Rigidbody found on the bullet prefab!");
         }
     }
 }
+
