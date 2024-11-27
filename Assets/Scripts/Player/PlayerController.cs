@@ -8,7 +8,9 @@ public class PlayerController : NetworkBehaviour
     public float speed = 10f;            // Movement speed multiplier for forward/backward
     public float strafeSpeed = 7.5f;    // Movement speed multiplier for strafing
     public float maxSpeed = 5f;         // Maximum movement speed
+    public float jumpForce = 500f;  
     private Rigidbody rb;               // Reference to the Rigidbody
+    private bool isGrounded = true;
 
     private void Start()
     {
@@ -53,6 +55,7 @@ public class PlayerController : NetworkBehaviour
         {
             rb.AddForce(rb.transform.right * strafeSpeed, ForceMode.Force);
         }
+
 
         // Clamp the player's velocity to the max speed
         LimitSpeed();
