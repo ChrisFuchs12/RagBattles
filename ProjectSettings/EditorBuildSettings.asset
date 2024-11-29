@@ -8,14 +8,11 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: 6391534e196a64d2bbd832cf67099230
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Parkour.unity
     guid: 24190cb5d40c149ad98d1d520436342c
   - enabled: 0
     path: Assets/Scenes/TestScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 1
-    path: Assets/Scenes/TeckyRags.unity
-    guid: 2b92c0241f23f407bbd3339fabed36e8
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: efa3fb3c38ce6e743b450fca6f0460fd, type: 2}
