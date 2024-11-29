@@ -110,8 +110,8 @@ public class RelayTest : MonoBehaviour
     {
         try 
         {
-            // Create relay allocation for 3 max connections
-            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(3);
+            // Create relay allocation for 10 max connections
+            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(10);
             
             // Get join code for the allocation
             string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);

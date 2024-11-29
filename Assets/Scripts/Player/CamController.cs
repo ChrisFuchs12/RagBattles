@@ -45,7 +45,7 @@ public class CamController : NetworkBehaviour
     {
         rotationX += Input.GetAxis("Mouse X") * rotationSpeed;
         rotationY -= Input.GetAxis("Mouse Y") * rotationSpeed;
-        rotationY = Mathf.Clamp(rotationY, -35, 60);
+        rotationY = Mathf.Clamp(rotationY, -60, 100);
 
         Quaternion rootRotation = Quaternion.Euler(rotationY, rotationX, 0);
         root.rotation = rootRotation;
