@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 650892507457814180}
   m_Layer: 0
   m_Name: TempBullet
-  m_TagString: Untagged
+  m_TagString: Gun
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
