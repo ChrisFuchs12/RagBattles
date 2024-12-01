@@ -687,7 +687,7 @@ GameObject:
   - component: {fileID: 1005877736}
   - component: {fileID: 1005877735}
   m_Layer: 5
-  m_Name: Icon
+  m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -993,7 +993,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadingScrn: {fileID: 2053375656}
-  icon: {fileID: 1005877733}
 --- !u!1 &2053375656
 GameObject:
   m_ObjectHideFlags: 0
