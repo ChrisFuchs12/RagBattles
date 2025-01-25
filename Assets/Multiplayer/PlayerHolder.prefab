@@ -94,7 +94,6 @@ Transform:
   - {fileID: 3008973753829036372}
   - {fileID: 8870146409553239831}
   - {fileID: 5040793660946996155}
-  - {fileID: 6741844046154077242}
   m_Father: {fileID: 7858542107130110653}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1351,15 +1350,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3142903191270895440}
-  m_LocalRotation: {x: -0, y: -0, z: 2.1513027e-13, w: 1}
-  m_LocalPosition: {x: 0.198, y: 0.379, z: 0.718}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 1.087, y: 0.563, z: 0.007}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8363403911775474250}
   m_Father: {fileID: 6741844046154077242}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!114 &3641856961613346755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1612,7 +1611,6 @@ GameObject:
   - component: {fileID: 4362581331916782113}
   - component: {fileID: 4362581331916782110}
   - component: {fileID: 4362581331916782112}
-  - component: {fileID: 4362581331916782115}
   - component: {fileID: 4362581331916782114}
   - component: {fileID: 8425952569600550468}
   - component: {fileID: 8244900658888735667}
@@ -1687,9 +1685,9 @@ ConfigurableJoint:
   m_XMotion: 0
   m_YMotion: 0
   m_ZMotion: 0
-  m_AngularXMotion: 2
-  m_AngularYMotion: 2
-  m_AngularZMotion: 2
+  m_AngularXMotion: 0
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimitSpring:
     spring: 0
     damper: 0
@@ -1765,19 +1763,6 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!114 &4362581331916782115
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4362581331916782108}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c11bae05e5f67745bb5c2b1f25cdbb5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 7858542105124797138}
 --- !u!114 &4362581331916782114
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2530,9 +2515,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7185125907803964133}
-  m_LocalRotation: {x: -0.70709634, y: -0.0034247062, z: 0.70709705, w: 0.0041045}
-  m_LocalPosition: {x: 0.18440528, y: 0.18376142, z: -0.13099724}
-  m_LocalScale: {x: 0.4885325, y: 0.20275266, z: 0.20275262}
+  m_LocalRotation: {x: -0.7070963, y: -0.0034247055, z: 0.7070971, w: 0.0041044992}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.4885324, y: 0.20275272, z: 0.20275265}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 60831865751647289}
@@ -2621,9 +2606,9 @@ MonoBehaviour:
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
   PositionThreshold: 0.001
   RotAngleThreshold: 0.01
   ScaleThreshold: 0.01
@@ -2702,7 +2687,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6741844046154077242}
   m_Layer: 0
-  m_Name: Guns
+  m_Name: Weapons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2715,14 +2700,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7496750335075458017}
-  m_LocalRotation: {x: -0.000000029193796, y: 0.0000073690408, z: 0.0000072096855, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.5028949, y: 0.50241476, z: -0.4975715, w: -0.4970904}
+  m_LocalPosition: {x: -0.002024071, y: -0.71385807, z: 0.56334716}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9019535747943883943}
-  m_Father: {fileID: 4727802106449438760}
-  m_RootOrder: 3
+  m_Father: {fileID: 3014372353230527231}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7590588013255338979
 GameObject:
@@ -5241,9 +5226,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7860267995988806427}
-  m_LocalRotation: {x: 0.70709634, y: 0.0034247062, z: -0.70709705, w: 0.0041045}
-  m_LocalPosition: {x: -1.149, y: -0.03, z: 0}
-  m_LocalScale: {x: 4.932118, y: 4.931329, z: 2.0470824}
+  m_LocalRotation: {x: 0.7070962, y: 0.003424705, z: -0.7070971, w: 0.004104499}
+  m_LocalPosition: {x: -1.149, y: -0.029999882, z: 0.000018226583}
+  m_LocalScale: {x: 4.9321175, y: 4.9313283, z: 2.047083}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8363403911775474250}
@@ -5481,7 +5466,6 @@ GameObject:
   - component: {fileID: 3014372353230526976}
   - component: {fileID: 3014372353230526977}
   - component: {fileID: 3014372353230526979}
-  - component: {fileID: 3014372353230526978}
   - component: {fileID: 3014372353230526981}
   - component: {fileID: 4374050233514625278}
   - component: {fileID: 7030787619002493118}
@@ -5506,6 +5490,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1437705513358577823}
+  - {fileID: 6741844046154077242}
   m_Father: {fileID: 6414207281545736274}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5557,9 +5542,9 @@ ConfigurableJoint:
   m_XMotion: 0
   m_YMotion: 0
   m_ZMotion: 0
-  m_AngularXMotion: 2
-  m_AngularYMotion: 2
-  m_AngularZMotion: 2
+  m_AngularXMotion: 0
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimitSpring:
     spring: 0
     damper: 0
@@ -5635,19 +5620,6 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!114 &3014372353230526978
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8192436145688301736}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c11bae05e5f67745bb5c2b1f25cdbb5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 7858542106548673003}
 --- !u!114 &3014372353230526981
 MonoBehaviour:
   m_ObjectHideFlags: 0
