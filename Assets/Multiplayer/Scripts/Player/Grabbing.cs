@@ -16,34 +16,33 @@ public class Grabbing : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
-    
     void Update()
     {
-        if(Input.GetMouseButtonDown(isLeftOrRight)){
-            if(isLeftOrRight == 0){
-                animator.SetBool("LeftHand", true);
-            }if(isLeftOrRight == 1){
-                animator.SetBool("RightHand", true);
-            }
-
-            //FixedJoint fj = grabbedObj.AddComponent<FixedJoint>();
-            //fj.connectedBody = rb;
-            //fj.breakForce = 9000;
-
+        if(Input.GetKeyDown(KeyCode.Q)){
+            animator.SetBool("LeftHand", true);
+        }
+        if(Input.GetKeyDown(KeyCode.E)){
+            animator.SetBool("RightHand", true);
         }
 
-        if(Input.GetMouseButtonUp(isLeftOrRight)){
-            if(isLeftOrRight == 0){
-                animator.SetBool("LeftHand", false);
-            }if(isLeftOrRight == 1){
-                animator.SetBool("RightHand", false);
-            }
+        if(Input.GetKeyUp(KeyCode.Q)){
+            animator.SetBool("LeftHand", false);
 
             if(grabbedObj != null){
-                Destroy(grabbedObj.GetComponent<FixedJoint>());
+            Destroy(grabbedObj.GetComponent<FixedJoint>());
             }
 
             grabbedObj = null;
+        }
+        if(Input.GetKeyUp(KeyCode.E)){
+            animator.SetBool("RightHand", false);
+
+            if(grabbedObj != null){
+            Destroy(grabbedObj.GetComponent<FixedJoint>());
+            }
+
+            grabbedObj = null;
+        
         }
     }
 
