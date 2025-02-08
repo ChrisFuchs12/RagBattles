@@ -252,10 +252,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08c21eafe4ab66f488d182287034edc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1000
-  strafeSpeed: 1000
-  maxSpeed: 500
-  jumpForce: 500
+  speed: 500
+  strafeSpeed: 500
+  maxSpeed: 750
+  jumpForce: 100000
 --- !u!143 &379267580967055715
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1875,9 +1875,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4440856918636108335}
-  m_LocalRotation: {x: -0.0035986013, y: 4.345093e-14, z: 2.2721877e-13, w: 0.99999356}
-  m_LocalPosition: {x: -0, y: 0.19543146, z: 5.955165e-10}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0.0035986013, y: -4.145701e-13, z: -1.4936284e-13, w: 0.99999356}
+  m_LocalPosition: {x: 0.0000076719425, y: 0.19543158, z: -0.000000253753}
+  m_LocalScale: {x: 1, y: 1.0000001, z: 1.0000001}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6602354896442776127}

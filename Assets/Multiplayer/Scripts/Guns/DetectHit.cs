@@ -24,7 +24,6 @@ public class DetectHit : NetworkBehaviour
     private void OnCollisionEnter(Collision collision){
         if(collision.gameObject.tag == "Gun"){
             rb.AddForce(-rb.transform.forward * knockback, ForceMode.Force);
-            Debug.Log("AAA");
         }
     }
 }

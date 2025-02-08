@@ -10,7 +10,7 @@ public class PlayerController : NetworkBehaviour
     public float maxSpeed = 5f;         // Maximum movement speed
     public float jumpForce = 500f;  
     private Rigidbody rb;               // Reference to the Rigidbody
-    private bool isGrounded = true;
+    private bool isGrounded = false;
 
     private void Start()
     {
@@ -56,10 +56,23 @@ public class PlayerController : NetworkBehaviour
             rb.AddForce(rb.transform.right * strafeSpeed, ForceMode.Force);
         }
 
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded == true)
+        {
+            rb.AddForce(rb.transform.up * jumpForce, ForceMode.Force);
+            isGrounded = false;
+        }
+
 
         // Clamp the player's velocity to the max speed
         LimitSpeed();
     }
+
+    private void OnCollisionEnter(Collision collision){
+        if(collision.gameObject.tag == "Floor"){
+            isGrounded = true;
+        }
+    }
+
 
     private void LimitSpeed()
     {
