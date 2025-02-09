@@ -288,7 +288,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 500
-  strafeSpeed: 500
+  strafeSpeed: 750
   maxSpeed: 750
   jumpForce: 100000
 --- !u!143 &379267580967055715
@@ -1884,12 +1884,12 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4362581331916782108}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.2502536
-  m_Height: 0.6890314
+  m_Radius: 0.10956845
+  m_Height: 0.6223947
   m_Direction: 1
-  m_Center: {x: 0, y: 0.27260953, z: 0}
+  m_Center: {x: 0.000000011336216, y: 0.23929107, z: 0.008671473}
 --- !u!54 &4362581331916782110
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2583,6 +2583,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4648330667037010969}
+  - component: {fileID: 2050816633182359894}
+  - component: {fileID: 1117544508807275256}
   m_Layer: 0
   m_Name: Glock40
   m_TagString: Untagged
@@ -2607,6 +2609,32 @@ Transform:
   m_Father: {fileID: 8363403911775474250}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!65 &2050816633182359894
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5461143076225152675}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 8.632845, y: 1.780472, z: 1}
+  m_Center: {x: -0.9795801, y: 1.1568186, z: 0.0000021076346}
+--- !u!65 &1117544508807275256
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5461143076225152675}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.294833, y: 4.0382924, z: 1}
+  m_Center: {x: 1.9122176, y: -1.5310608, z: -0.0000040993264}
 --- !u!1 &5905165551992485736
 GameObject:
   m_ObjectHideFlags: 0
@@ -5634,12 +5662,12 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8192436145688301736}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.25025365
-  m_Height: 0.6890314
+  m_Radius: 0.099061444
+  m_Height: 0.54576343
   m_Direction: 1
-  m_Center: {x: 0.000000011347763, y: 0.34452114, z: 0.01542202}
+  m_Center: {x: -0.003770275, y: 0.27289876, z: -0.004467582}
 --- !u!54 &3014372353230526977
 Rigidbody:
   m_ObjectHideFlags: 0
