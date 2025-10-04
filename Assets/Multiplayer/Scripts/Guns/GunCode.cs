@@ -9,6 +9,8 @@ public class GunCode : NetworkBehaviour
     [SerializeField] private Transform firingPoint;
     [SerializeField] private GameObject bullet;
 
+    [SerializeField] private GameObject slide;
+
     // Settings
     [SerializeField] private float bulletSpeed = 50;
     [SerializeField] private float ammo = 50;
@@ -19,7 +21,7 @@ public class GunCode : NetworkBehaviour
         // Allow everyone (host and clients) to shoot
         if (Input.GetMouseButtonDown(0) && IsOwner) // Ensure only local player can send RPCs
         {
-            Debug.Log("Shoot button pressed");
+            
             RequestSpawnBulletServerRpc();
         }
     }
@@ -27,7 +29,7 @@ public class GunCode : NetworkBehaviour
     [ServerRpc]
     private void RequestSpawnBulletServerRpc(ServerRpcParams rpcParams = default)
     {
-        Debug.Log("Server received spawn request");
+        
 
         // Instantiate and handle bullet on the server
         GameObject spawnedObj = Instantiate(bullet, firingPoint.position, firingPoint.rotation);
@@ -36,7 +38,7 @@ public class GunCode : NetworkBehaviour
         NetworkObject networkObject = spawnedObj.GetComponent<NetworkObject>();
         if (networkObject == null)
         {
-            Debug.LogError("Bullet prefab is missing a NetworkObject component!");
+            
             Destroy(spawnedObj);
             return;
         }
@@ -48,7 +50,7 @@ public class GunCode : NetworkBehaviour
         Rigidbody rb = spawnedObj.GetComponent<Rigidbody>();
         if (rb != null)
         {
-            Debug.Log("Applying force to bullet.");
+            
             rb.AddForce(firingPoint.forward * bulletSpeed, ForceMode.Impulse);
         }
         else

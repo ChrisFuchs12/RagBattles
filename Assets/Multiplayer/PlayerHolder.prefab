@@ -1481,7 +1481,7 @@ GameObject:
   - component: {fileID: 9019535747943883943}
   - component: {fileID: 3641856961613346755}
   m_Layer: 0
-  m_Name: AssultRifle
+  m_Name: PistolWeapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1517,6 +1517,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   firingPoint: {fileID: 60831865751647289}
   bullet: {fileID: 2098528159776694922, guid: f696cbf40a0934e1fbf19637469b97b4, type: 3}
+  slide: {fileID: 0}
   bulletSpeed: 5000
   ammo: 50
   maxAmmo: 50
