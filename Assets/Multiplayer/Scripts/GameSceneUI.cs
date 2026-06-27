@@ -16,7 +16,8 @@ public class GameSceneUI : MonoBehaviour
     [SerializeField] private KeyCode toggleKey = KeyCode.Escape;
 
     private bool _isPaused;
-    private bool _isLeaving; // prevents double-handling
+    private bool _isLeaving;
+    private bool _wasConnected; // tracks whether we were connected last frame
 
     private void Start()
     {
@@ -33,43 +34,33 @@ public class GameSceneUI : MonoBehaviour
         if (pausePanel != null)
             pausePanel.SetActive(false);
 
-        // Listen for host disconnection — fired on clients when the host drops
-        if (NetworkManager.Singleton != null)
-            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
-    }
-
-    private void OnDestroy()
-    {
-        // Always unsubscribe to avoid stale callbacks
-        if (NetworkManager.Singleton != null)
-            NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;
+        // Record that we are connected when the game scene starts
+        _wasConnected = NetworkManager.Singleton != null && NetworkManager.Singleton.IsConnectedClient;
     }
 
     private void Update()
     {
+        // Toggle pause panel
         if (Input.GetKeyDown(toggleKey) && pausePanel != null)
         {
             _isPaused = !_isPaused;
             pausePanel.SetActive(_isPaused);
         }
-    }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    //  Called on ALL clients when any client disconnects.
-    //  When the host drops, Netcode fires this with the server client ID (0),
-    //  which is how we detect a host disconnection on the client side.
-    // ─────────────────────────────────────────────────────────────────────────
-    private void OnClientDisconnected(ulong clientId)
-    {
-        // Only react if we are a client (not the host) and the server disconnected
-        bool isClient        = NetworkManager.Singleton != null && !NetworkManager.Singleton.IsHost;
-        bool serverDropped   = clientId == NetworkManager.ServerClientId;
+        // Detect host drop — if we were connected but no longer are, return to menu.
+        // This is more reliable than OnClientDisconnectCallback which can miss host
+        // shutdowns depending on the Netcode version.
+        if (_isLeaving) return;
 
-        if (isClient && serverDropped)
+        bool isNowConnected = NetworkManager.Singleton != null && NetworkManager.Singleton.IsConnectedClient;
+
+        if (_wasConnected && !isNowConnected)
         {
-            Debug.Log("Host disconnected — returning to main menu.");
+            Debug.Log("Lost connection to host — returning to main menu.");
             ReturnToMenu();
         }
+
+        _wasConnected = isNowConnected;
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -77,12 +68,6 @@ public class GameSceneUI : MonoBehaviour
     // ─────────────────────────────────────────────────────────────────────────
     private void OnLeaveClicked()
     {
-        if (RelayTest.Instance == null)
-        {
-            Debug.LogError("GameSceneUI: RelayTest.Instance is null — is NetworkManagerBootstrapper keeping it alive?");
-            return;
-        }
-
         if (leaveButton != null)
             leaveButton.interactable = false;
 
@@ -94,8 +79,12 @@ public class GameSceneUI : MonoBehaviour
     // ─────────────────────────────────────────────────────────────────────────
     private void ReturnToMenu()
     {
-        if (_isLeaving) return; // prevent being called twice
+        if (_isLeaving) return;
         _isLeaving = true;
+
+        // Restore cursor before returning to menu
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible   = true;
 
         if (leaveButton != null)
             leaveButton.interactable = false;
