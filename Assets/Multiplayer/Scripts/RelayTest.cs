@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Unity.Services.Authentication;
 using Unity.Services.Relay;
 using Unity.Services.Core;
@@ -14,64 +15,73 @@ using Unity.Services.Lobbies.Models;
 using UnityEngine.UI;
 using TMPro;
 
-// ─────────────────────────────────────────────────────────────────────────────
-//  UI prefab data container – attach this to your server-row prefab
-//  (keep in its own file: ServerListItem.cs)
-// ─────────────────────────────────────────────────────────────────────────────
-// public class ServerListItem : MonoBehaviour
-// {
-//     [SerializeField] public TextMeshProUGUI codeLabel;
-//     [SerializeField] public TextMeshProUGUI playerCountLabel;
-//     [SerializeField] public Button          joinButton;
-// }
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  Main relay + lobby server-browser controller
-// ─────────────────────────────────────────────────────────────────────────────
 public class RelayTest : MonoBehaviour
 {
-    // ── Inspector: original UI ────────────────────────────────────────────────
+    // ── Inspector: required UI ────────────────────────────────────────────────
     [Header("Required UI Components")]
-    [SerializeField] private Button           hostButton;
-    [SerializeField] private Button           joinButton;
-    [SerializeField] private TMP_InputField   joinInput;
-    [SerializeField] private TextMeshProUGUI  codeText;
+    [SerializeField] private Button          hostButton;
+    [SerializeField] private Button          joinButton;
+    [SerializeField] private TMP_InputField  joinInput;
+    [SerializeField] private TextMeshProUGUI codeText;
 
     // ── Inspector: server browser ─────────────────────────────────────────────
     [Header("Server Browser UI")]
-    [SerializeField] private Transform        serverListContent;       // Content child of ScrollRect
-    [SerializeField] private GameObject       serverListItemPrefab;    // prefab with ServerListItem component
-    [SerializeField] private Button           refreshButton;           // optional manual refresh
-    [SerializeField] private TextMeshProUGUI  browserStatusText;       // status label
+    [SerializeField] private Transform       serverListContent;
+    [SerializeField] private GameObject      serverListItemPrefab;
+    [SerializeField] private Button          refreshButton;
+    [SerializeField] private TextMeshProUGUI browserStatusText;
+
+    // ── Inspector: panels ─────────────────────────────────────────────────────
+    [Header("UI Panels")]
+    [SerializeField] private GameObject lobbyPanel;
+    [SerializeField] private GameObject connectedPanel;
 
     // ── Inspector: network ────────────────────────────────────────────────────
     [Header("Network Components")]
-    [SerializeField] private NetworkManager   networkManager;
-    [SerializeField] private UnityTransport   unityTransport;
+    [SerializeField] private NetworkManager  networkManager;
+    [SerializeField] private UnityTransport  unityTransport;
 
-    // ── Configuration ─────────────────────────────────────────────────────────
+    // ── Inspector: scene + config ─────────────────────────────────────────────
+    [Header("Scene Settings")]
+    [SerializeField] private string gameSceneName  = "GameScene";
+    [SerializeField] private string menuSceneName  = "MenuScene";
+
     [Header("Server Browser Settings")]
     [SerializeField] private int   maxPlayers             = 10;
     [SerializeField] private float refreshIntervalSeconds = 10f;
 
     // ── Lobby constants ───────────────────────────────────────────────────────
-    private const string KEY_JOIN_CODE = "joinCode";   // lobby data key
+    private const string KEY_JOIN_CODE = "joinCode";
+
+    // ── Singleton so GameSceneUI can call LeaveAsync ──────────────────────────
+    public static RelayTest Instance { get; private set; }
 
     // ── Private state ─────────────────────────────────────────────────────────
-    private Lobby  _hostedLobby;          // our lobby (host only)
-    private float  _heartbeatTimer;       // keeps lobby alive
-    private float  _refreshTimer;
+    private Lobby _hostedLobby;
+    private float _heartbeatTimer;
+    private float _refreshTimer;
+    private bool  _joiningOrHosting;
 
     // ─────────────────────────────────────────────────────────────────────────
     //  Unity lifecycle
     // ─────────────────────────────────────────────────────────────────────────
     private void Awake()
     {
+        // Singleton setup — NetworkManagerBootstrapper keeps this alive across scenes
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+
         ValidateComponentReferences();
     }
 
     private void Start()
     {
+        ShowLobbyPanel();
+
         if (AreComponentsValid())
             InitializeUnityServicesAsync();
     }
@@ -82,31 +92,88 @@ public class RelayTest : MonoBehaviour
         HandleServerListRefresh();
     }
 
-    private async void OnDestroy()
+    // NOTE: lobby cleanup is now handled explicitly in LeaveAsync so the host
+    // can await it properly before shutting Netcode down.
+
+    // ─────────────────────────────────────────────────────────────────────────
+    //  Panel switching
+    // ─────────────────────────────────────────────────────────────────────────
+    private void ShowLobbyPanel()
     {
-        // Delete our lobby when the host leaves so it disappears from the list
-        if (_hostedLobby != null)
+        if (lobbyPanel     != null) lobbyPanel.SetActive(true);
+        if (connectedPanel != null) connectedPanel.SetActive(false);
+    }
+
+    private void ShowConnectedPanel()
+    {
+        if (lobbyPanel     != null) lobbyPanel.SetActive(false);
+        if (connectedPanel != null) connectedPanel.SetActive(true);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    //  Public leave method — called by GameSceneUI.LeaveButton
+    // ─────────────────────────────────────────────────────────────────────────
+    public async void LeaveAsync()
+    {
+        try
         {
-            try   { await LobbyService.Instance.DeleteLobbyAsync(_hostedLobby.Id); }
-            catch { /* best-effort */ }
+            bool isHost = networkManager.IsHost;
+
+            if (isHost)
+            {
+                // Delete lobby so it disappears from the browser for everyone
+                if (_hostedLobby != null)
+                {
+                    try   { await LobbyService.Instance.DeleteLobbyAsync(_hostedLobby.Id); }
+                    catch { /* best-effort */ }
+                    _hostedLobby = null;
+                }
+
+                networkManager.Shutdown();
+            }
+            else
+            {
+                networkManager.Shutdown();
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"Leave error: {ex.Message}");
+        }
+        finally
+        {
+            // Reset state
+            _joiningOrHosting = false;
+
+            // Shutdown needs a frame to complete before loading a new scene
+            await System.Threading.Tasks.Task.Delay(100);
+
+            // Return to menu scene and reset UI
+            SceneManager.LoadScene(menuSceneName);
+            ShowLobbyPanel();
+            UnlockUI();
+
+            if (codeText != null) codeText.text = string.Empty;
         }
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    //  Lobby heartbeat – must ping every 30 s or Unity auto-deletes the lobby
+    //  Heartbeat
     // ─────────────────────────────────────────────────────────────────────────
     private void HandleLobbyHeartbeat()
     {
         if (_hostedLobby == null) return;
-
         _heartbeatTimer -= Time.deltaTime;
         if (_heartbeatTimer <= 0f)
         {
-            _heartbeatTimer = 25f; // ping every 25 s (well within the 30 s limit)
+            _heartbeatTimer = 25f;
             _ = LobbyService.Instance.SendHeartbeatPingAsync(_hostedLobby.Id);
         }
     }
 
+    // ─────────────────────────────────────────────────────────────────────────
+    //  Auto-refresh
+    // ─────────────────────────────────────────────────────────────────────────
     private void HandleServerListRefresh()
     {
         _refreshTimer -= Time.deltaTime;
@@ -118,7 +185,7 @@ public class RelayTest : MonoBehaviour
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    //  Validation helpers
+    //  Validation
     // ─────────────────────────────────────────────────────────────────────────
     private void ValidateComponentReferences()
     {
@@ -126,6 +193,9 @@ public class RelayTest : MonoBehaviour
         if (joinButton == null) Debug.LogError("Join Button is not assigned in the Inspector!");
         if (joinInput  == null) Debug.LogError("Join Input Field is not assigned in the Inspector!");
         if (codeText   == null) Debug.LogError("Code Text is not assigned in the Inspector!");
+
+        if (lobbyPanel     == null) Debug.LogWarning("Lobby Panel not assigned – panel switching disabled.");
+        if (connectedPanel == null) Debug.LogWarning("Connected Panel not assigned – panel switching disabled.");
 
         if (networkManager == null)
         {
@@ -170,7 +240,7 @@ public class RelayTest : MonoBehaviour
 
             SetupButtonListeners();
 
-            _refreshTimer = 0f; // trigger an immediate first refresh
+            _refreshTimer = 0f;
         }
         catch (Exception ex)
         {
@@ -194,24 +264,44 @@ public class RelayTest : MonoBehaviour
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    //  HOST – create Relay allocation + Lobby entry
+    //  UI helpers
+    // ─────────────────────────────────────────────────────────────────────────
+    private void LockUI(string statusMessage)
+    {
+        _joiningOrHosting          = true;
+        hostButton.interactable    = false;
+        joinButton.interactable    = false;
+        if (refreshButton != null)
+            refreshButton.interactable = false;
+        SetBrowserStatus(statusMessage);
+    }
+
+    private void UnlockUI()
+    {
+        _joiningOrHosting          = false;
+        hostButton.interactable    = true;
+        joinButton.interactable    = true;
+        if (refreshButton != null)
+            refreshButton.interactable = true;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    //  HOST
     // ─────────────────────────────────────────────────────────────────────────
     private async void CreateRelayAndLobbyAsync()
     {
+        if (_joiningOrHosting) return;
+        LockUI("Creating server…");
+
         try
         {
-            // 1. Create Relay allocation
             Allocation allocation = await RelayService.Instance.CreateAllocationAsync(maxPlayers);
             string joinCode       = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
 
-            codeText.text = "Code: " + joinCode;
-
-            // 2. Start Netcode host via Relay
             var relayServerData = new RelayServerData(allocation, "dtls");
             unityTransport.SetRelayServerData(relayServerData);
             networkManager.StartHost();
 
-            // 3. Create a public Lobby and store the relay join code in its data
             var lobbyOptions = new CreateLobbyOptions
             {
                 IsPrivate = false,
@@ -227,79 +317,101 @@ public class RelayTest : MonoBehaviour
             };
 
             _hostedLobby    = await LobbyService.Instance.CreateLobbyAsync("Game Lobby", maxPlayers, lobbyOptions);
-            _heartbeatTimer = 0f; // start heartbeat immediately
+            _heartbeatTimer = 0f;
 
-            // 4. Keep player count in sync
             networkManager.OnClientConnectedCallback  += clientId => { _ = UpdateLobbyPlayerCountAsync(); };
             networkManager.OnClientDisconnectCallback += clientId => { _ = UpdateLobbyPlayerCountAsync(); };
+
+            codeText.text = "Code: " + joinCode;
+            ShowConnectedPanel();
+
+            networkManager.SceneManager.LoadScene(gameSceneName, LoadSceneMode.Single);
         }
         catch (Exception ex)
         {
+            UnlockUI();
+            ShowLobbyPanel();
             HandleRelayError("Host", ex);
         }
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    //  JOIN – by relay code directly (original button behaviour, unchanged)
+    //  JOIN by code
     // ─────────────────────────────────────────────────────────────────────────
     private async void JoinByCodeAsync(string joinCode)
     {
+        if (_joiningOrHosting) return;
+        if (string.IsNullOrWhiteSpace(joinCode))
+        {
+            SetBrowserStatus("Please enter a join code.");
+            return;
+        }
+
+        LockUI("Joining server…");
+
         try
         {
             var joinAllocation  = await RelayService.Instance.JoinAllocationAsync(joinCode);
             var relayServerData = new RelayServerData(joinAllocation, "dtls");
             unityTransport.SetRelayServerData(relayServerData);
+
+            codeText.text = "Code: " + joinCode;
+            ShowConnectedPanel();
+
             networkManager.StartClient();
         }
         catch (Exception ex)
         {
+            UnlockUI();
+            ShowLobbyPanel();
             HandleRelayError("Join", ex);
         }
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    //  JOIN – from server browser row (joins via Lobby → reads relay code)
+    //  JOIN from server browser
     // ─────────────────────────────────────────────────────────────────────────
     private async void JoinLobbyAsync(Lobby lobby)
     {
+        if (_joiningOrHosting) return;
+        LockUI("Joining server…");
+
         try
         {
-            // Join the Lobby so the player count updates
             await LobbyService.Instance.JoinLobbyByIdAsync(lobby.Id);
 
-            // Retrieve the relay join code stored in the lobby's data
             if (!lobby.Data.TryGetValue(KEY_JOIN_CODE, out var joinCodeData))
             {
-                Debug.LogError("Lobby is missing relay join code data!");
+                UnlockUI();
+                SetBrowserStatus("Error: lobby is missing relay code.");
                 return;
             }
 
-            // Use the relay code to connect via Netcode
-            await JoinRelayAsync(joinCodeData.Value);
+            var joinAllocation  = await RelayService.Instance.JoinAllocationAsync(joinCodeData.Value);
+            var relayServerData = new RelayServerData(joinAllocation, "dtls");
+            unityTransport.SetRelayServerData(relayServerData);
+
+            codeText.text = "Code: " + joinCodeData.Value;
+            ShowConnectedPanel();
+
+            networkManager.StartClient();
         }
         catch (Exception ex)
         {
+            UnlockUI();
+            ShowLobbyPanel();
             HandleRelayError("Lobby Join", ex);
         }
     }
 
-    private async Task JoinRelayAsync(string joinCode)
-    {
-        var joinAllocation  = await RelayService.Instance.JoinAllocationAsync(joinCode);
-        var relayServerData = new RelayServerData(joinAllocation, "dtls");
-        unityTransport.SetRelayServerData(relayServerData);
-        networkManager.StartClient();
-    }
-
     // ─────────────────────────────────────────────────────────────────────────
-    //  Keep player count accurate in the lobby (host only)
+    //  Lobby player count sync
     // ─────────────────────────────────────────────────────────────────────────
     private async Task UpdateLobbyPlayerCountAsync()
     {
         if (_hostedLobby == null) return;
         try
         {
-            // Refresh our local copy so CurrentPlayers is accurate
             _hostedLobby = await LobbyService.Instance.GetLobbyAsync(_hostedLobby.Id);
         }
         catch (Exception ex)
@@ -309,12 +421,13 @@ public class RelayTest : MonoBehaviour
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    //  Server browser – fetch lobbies from Unity Lobby service
+    //  Server browser
     // ─────────────────────────────────────────────────────────────────────────
     private async Task RefreshServerListAsync()
     {
         if (!IsBrowserReady()) return;
         if (!AuthenticationService.Instance.IsSignedIn) return;
+        if (_joiningOrHosting) return;
 
         SetBrowserStatus("Refreshing…");
 
@@ -325,15 +438,13 @@ public class RelayTest : MonoBehaviour
                 Count = 25,
                 Filters = new List<QueryFilter>
                 {
-                    // Only show lobbies that still have open slots
                     new QueryFilter(
-                        field:    QueryFilter.FieldOptions.AvailableSlots,
-                        op:       QueryFilter.OpOptions.GT,
-                        value:    "0")
+                        field: QueryFilter.FieldOptions.AvailableSlots,
+                        op:    QueryFilter.OpOptions.GT,
+                        value: "0")
                 },
                 Order = new List<QueryOrder>
                 {
-                    // Newest lobbies first
                     new QueryOrder(
                         asc:   false,
                         field: QueryOrder.FieldOptions.Created)
@@ -350,12 +461,8 @@ public class RelayTest : MonoBehaviour
         }
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    //  Rebuild the scroll-view rows from a list of Lobby objects
-    // ─────────────────────────────────────────────────────────────────────────
     private void RebuildServerList(List<Lobby> lobbies)
     {
-        // Clear old rows
         foreach (Transform child in serverListContent)
             Destroy(child.gameObject);
 
@@ -369,10 +476,9 @@ public class RelayTest : MonoBehaviour
 
         foreach (var lobby in lobbies)
         {
-            // Skip lobbies that don't have our relay code key (shouldn't happen, but safe)
             if (!lobby.Data.ContainsKey(KEY_JOIN_CODE)) continue;
 
-            GameObject   row  = Instantiate(serverListItemPrefab, serverListContent);
+            GameObject     row  = Instantiate(serverListItemPrefab, serverListContent);
             ServerListItem item = row.GetComponent<ServerListItem>();
 
             if (item == null)
@@ -384,12 +490,12 @@ public class RelayTest : MonoBehaviour
 
             string relayCode = lobby.Data[KEY_JOIN_CODE].Value;
 
-            if (item.codeLabel        != null) item.codeLabel.text        = $"Code: {relayCode}";
-            if (item.playerCountLabel != null) item.playerCountLabel.text  = $"{lobby.Players.Count}/{lobby.MaxPlayers}";
+            if (item.codeLabel        != null) item.codeLabel.text       = $"Code: {relayCode}";
+            if (item.playerCountLabel != null) item.playerCountLabel.text = $"{lobby.Players.Count}/{lobby.MaxPlayers}";
 
             if (item.joinButton != null)
             {
-                Lobby capturedLobby = lobby; // capture for lambda
+                Lobby capturedLobby = lobby;
                 item.joinButton.onClick.RemoveAllListeners();
                 item.joinButton.onClick.AddListener(() => JoinLobbyAsync(capturedLobby));
             }
