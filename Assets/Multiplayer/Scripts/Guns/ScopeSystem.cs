@@ -66,6 +66,13 @@ public class ScopeSystem : NetworkBehaviour
 
         ValidateReferences();
 
+        // Exclude the local player's own mesh layer from raycasts to prevent self-hits
+        int localLayer = LayerMask.NameToLayer(localPlayerLayer);
+        if (localLayer != -1)
+            hitLayers &= ~(1 << localLayer);
+        else
+            Debug.LogWarning("ScopeSystem: LocalPlayer layer not found – self-hit exclusion skipped.");
+
         if (thirdPersonCamera != null)
         {
             _cameraParent        = thirdPersonCamera.transform.parent;
