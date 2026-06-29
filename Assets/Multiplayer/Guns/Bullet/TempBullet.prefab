@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 789758630490870540}
   - component: {fileID: 4936584354053805492}
   - component: {fileID: 650892507457814180}
+  - component: {fileID: 2574615740519600647}
   m_Layer: 0
   m_Name: TempBullet
   m_TagString: Gun
@@ -181,3 +182,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2574615740519600647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2098528159776694922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bf64c8ee54b7d34198ef3dc10d04c34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxLifetime: 10

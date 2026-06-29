@@ -14,8 +14,8 @@ TagManager:
   - PostProcess
   - Water
   - UI
-  - 
-  - 
+  - LocalPlayer
+  - RemotePlayer
   - 
   - 
   - 

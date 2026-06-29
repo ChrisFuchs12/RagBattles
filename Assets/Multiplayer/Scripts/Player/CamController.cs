@@ -1,59 +1,52 @@
-using Unity.Netcode;
+﻿using Unity.Netcode;
 using UnityEngine;
 
 public class CamController : NetworkBehaviour
 {
-    public Camera playerCamera; // The camera to control
+    [Header("Camera")]
+    public Camera playerCamera;
     public GameObject balancer;
-    public static float rotationSpeed = 30;
 
-    private float rotationX = 0;
-    private float rotationY = 0;
+    [Header("Rotation Settings")]
+    public static float rotationSpeed = 30f;
+    [HideInInspector] public float rotationX = 0f;
+    [HideInInspector] public float rotationY = 0f;
+
+    [Header("Rig")]
     public Transform root;
-
     public float stomachOffset;
     public ConfigurableJoint hipJoint, stomachJoint;
 
-    private bool canMove = true;
-
     void Start()
     {
-        // Disable the camera for non-owners
         if (!IsOwner)
         {
             if (playerCamera != null)
-            {
                 playerCamera.gameObject.SetActive(false);
-            }
             return;
         }
 
-        // Lock the cursor for the owning player
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        Cursor.visible   = false;
     }
 
     void FixedUpdate()
     {
-        if (IsOwner)
-        {
-            CamControll();
-        }
+        if (!IsOwner) return;
+        CamControll();
     }
 
     void CamControll()
     {
-        rotationX += Input.GetAxis("Mouse X") * rotationSpeed;
-        rotationY -= Input.GetAxis("Mouse Y") * rotationSpeed;
-        rotationY = Mathf.Clamp(rotationY, -60, 100);
+        // Accumulate mouse input — shared with ScopeSystem for the transition
+        rotationX += Input.GetAxis("Mouse X") * rotationSpeed * Time.fixedDeltaTime * 50f;
+        rotationY -= Input.GetAxis("Mouse Y") * rotationSpeed * Time.fixedDeltaTime * 50f;
+        rotationY  = Mathf.Clamp(rotationY, -60f, 100f);
 
-        Quaternion rootRotation = Quaternion.Euler(rotationY, rotationX, 0);
-        root.rotation = rootRotation;
+        // Always drive the root rotation — same in both third and first person
+        root.rotation = Quaternion.Euler(rotationY, rotationX, 0f);
 
         if (stomachJoint != null)
-        {
-            stomachJoint.targetRotation = Quaternion.Euler(rotationY + stomachOffset, 0, 0);
-        }
+            stomachJoint.targetRotation = Quaternion.Euler(rotationY + stomachOffset, 0f, 0f);
     }
 }
-
