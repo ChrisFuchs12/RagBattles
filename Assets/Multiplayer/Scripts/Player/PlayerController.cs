@@ -43,7 +43,7 @@ public class PlayerController : NetworkBehaviour
 
         if (Input.GetKey(KeyCode.S))
         {
-            rb.AddForce(-rb.transform.forward * speed, ForceMode.Force);
+            rb.AddForce(-rb.transform.forward * speed * 1.5f, ForceMode.Force);
         }
 
         if (Input.GetKey(KeyCode.A))

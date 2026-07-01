@@ -3,21 +3,25 @@ using UnityEngine;
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  ScopeProjectile.cs
-//  Attach to your projectile prefab alongside a NetworkObject.
 //
-//  The server calls Initialise() immediately after spawning. The projectile
-//  then moves toward the target point at a fixed speed on every client.
-//  It destroys itself (server-side, despawning for all clients) either when
-//  it arrives at the target or after a safety lifetime expires.
+//  The server calls Initialise() immediately after spawning, passing both the
+//  local (scope gun tip) and remote (normal gun tip) spawn positions.
+//
+//  - The owner client sees the projectile fly from the scope gun muzzle.
+//  - All other clients see it fly from the normal gun tip position.
+//  - All clients fly toward the same target point so hit detection is consistent.
 // ─────────────────────────────────────────────────────────────────────────────
 public class ScopeProjectile : NetworkBehaviour
 {
     [Header("Lifetime")]
-    [SerializeField] private float maxLifetime = 10f; // despawn safety net
+    [SerializeField] private float maxLifetime = 10f;
 
-    // Synced so late-joining clients also get the correct values
-    private NetworkVariable<Vector3> _targetPoint  = new NetworkVariable<Vector3>();
-    private NetworkVariable<float>   _speed        = new NetworkVariable<float>();
+    // Synced so all clients get the correct values
+    private NetworkVariable<Vector3> _localSpawnPos  = new NetworkVariable<Vector3>();
+    private NetworkVariable<Vector3> _remoteSpawnPos = new NetworkVariable<Vector3>();
+    private NetworkVariable<Vector3> _targetPoint    = new NetworkVariable<Vector3>();
+    private NetworkVariable<float>   _speed          = new NetworkVariable<float>();
+    private NetworkVariable<ulong>   _ownerClientId  = new NetworkVariable<ulong>();
 
     private bool  _initialised;
     private float _lifetimeTimer;
@@ -25,32 +29,42 @@ public class ScopeProjectile : NetworkBehaviour
     // ─────────────────────────────────────────────────────────────────────────
     //  Called by ScopeSystem on the server right after Spawn()
     // ─────────────────────────────────────────────────────────────────────────
-    public void Initialise(Vector3 targetPoint, float speed)
+    public void Initialise(Vector3 localSpawnPos, Vector3 remoteSpawnPos, Vector3 targetPoint, float speed)
     {
-        _targetPoint.Value = targetPoint;
-        _speed.Value       = speed;
-        _initialised       = true;
+        _localSpawnPos.Value  = localSpawnPos;
+        _remoteSpawnPos.Value = remoteSpawnPos;
+        _targetPoint.Value    = targetPoint;
+        _speed.Value          = speed;
+        _ownerClientId.Value  = OwnerClientId;
 
-        // Point the transform at the target immediately on the server
+        _initialised = true;
+
+        // Server sees the projectile from the scope gun tip
+        transform.position = localSpawnPos;
         FaceTarget();
     }
 
     // ─────────────────────────────────────────────────────────────────────────
     public override void OnNetworkSpawn()
     {
-        // On clients the NetworkVariables arrive shortly after spawn;
-        // once they have non-zero speed we treat the projectile as initialised
-        _targetPoint.OnValueChanged += (_, __) => OnVariableReady();
-        _speed.OnValueChanged       += (_, __) => OnVariableReady();
+        _targetPoint.OnValueChanged    += (_, __) => OnVariableReady();
+        _speed.OnValueChanged          += (_, __) => OnVariableReady();
+        _localSpawnPos.OnValueChanged  += (_, __) => OnVariableReady();
+        _remoteSpawnPos.OnValueChanged += (_, __) => OnVariableReady();
+        _ownerClientId.OnValueChanged  += (_, __) => OnVariableReady();
     }
 
     private void OnVariableReady()
     {
-        if (_speed.Value > 0f)
-        {
-            _initialised = true;
-            FaceTarget();
-        }
+        if (_speed.Value <= 0f) return;
+
+        _initialised = true;
+
+        // Position the projectile based on whether this client is the owner
+        bool isOwner = NetworkManager.Singleton.LocalClientId == _ownerClientId.Value;
+        transform.position = isOwner ? _localSpawnPos.Value : _remoteSpawnPos.Value;
+
+        FaceTarget();
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -60,15 +74,12 @@ public class ScopeProjectile : NetworkBehaviour
 
         _lifetimeTimer += Time.deltaTime;
 
-        // Move toward target at constant speed
         float step = _speed.Value * Time.deltaTime;
         transform.position = Vector3.MoveTowards(
             transform.position, _targetPoint.Value, step);
 
-        // Keep facing the target while in flight (handles any spawn offset)
         FaceTarget();
 
-        // Despawn when arrived or lifetime exceeded — server only
         bool arrived  = Vector3.Distance(transform.position, _targetPoint.Value) < 0.05f;
         bool timedOut = _lifetimeTimer >= maxLifetime;
 
